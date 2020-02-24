@@ -6,10 +6,12 @@ const socket = io();
 socket.on('connect', () => {
   console.log(`[INFO] Connected to the server`)
 
-  socket.emit('createMessage', {
-    from: 'Jimbo',
-    text: 'Hey, stop throwing interceptions',
-  })
+  /** 
+    socket.emit('createMessage', {
+      from: 'Jimbo',
+      text: 'Hey, stop throwing interceptions',
+    })
+  **/
 })
 
 socket.on('newMessage', (message) => {
