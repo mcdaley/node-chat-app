@@ -7,15 +7,6 @@
     <p>Welcome to the chat app, dude</p>
 
     <script src='/socket.io/socket.io.js'></script>
-    <script>
-      const socket = io();
-      socket.on('connect', () => {
-        console.log(`[INFO] Connected to the server`)
-      })
-
-      socket.on('disconnect', () => {
-        console.log(`[INFO] Disconnected from the server`)
-      })
-    </script>
+    <script src='/js/index.js'></script>
   </body>
 </html>
