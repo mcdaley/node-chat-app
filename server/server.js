@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     generateMessage('Admin', 'New user joined the chat')
   )
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log(`[INFO] Received createMessage event: `, message)
     
     io.emit('newMessage', {
@@ -36,6 +36,8 @@ io.on('connection', (socket) => {
       text:       message.text,
       createdAt:  new Date().getTime(),
     });
+
+    callback('ACK')
   })
 
   socket.on('disconnect', () => {
