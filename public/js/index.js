@@ -33,3 +33,33 @@ jQuery('#message-form').on('submit', (e) => {
     console.log(`[INFO] Got it, response= `, response)
   })
 })
+
+// Send your location
+let locationButton = jQuery('#send-location')
+locationButton.on('click', () => {
+  if(!navigator.geolocation){
+    return alert('Geolocation is not supported by your browser')
+  }
+
+  navigator.geolocation.getCurrentPosition( (position) => {
+    console.log(`[DEBUG] position = `, position)
+    socket.emit('createLocationMessage', {
+      latitude:   position.coords.latitude,
+      longitude:  position.coords.longitude,
+    })
+  }, () => {
+    alert('Unable to fetch your location')
+  })
+})
+
+// Handle newLocationMessage
+socket.on('newLocationMessage', (message) => {
+  let li = jQuery('<li></li>')
+  li.text(`${message.from}: `)
+
+  let a  = jQuery('<a target="_blank">My current location</a>')
+  a.attr('href', message.url)
+
+  li.append(a)
+  jQuery('#messages').append(li)
+})
