@@ -11,12 +11,22 @@ socket.on('connect', () => {
 // Handle "newMessage" from server.
 socket.on('newMessage', (message) => {
   console.log(`[INFO] Receieved newMessage event from the server: `, message)
-  let formattedTime = moment(message.createdAt).format('h:mm a')
+  /** 
+    let formattedTime = moment(message.createdAt).format('h:mm a')
+    let li            = jQuery('<li></li>')
+    li.text(`${message.from} at ${formattedTime}: ${message.text}`)
 
-  let li = jQuery('<li></li>')
-  li.text(`${message.from} at ${formattedTime}: ${message.text}`)
-
-  jQuery('#messages').append(li)
+    jQuery('#messages').append(li)
+  **/
+ let formattedTime  = moment(message.createdAt).format('h:mm a')
+ let template       = jQuery('#message-template').html()
+ 
+ html = Mustache.render(template, {
+   from:      message.from,
+   text:      message.text,
+   createdAt: formattedTime,
+ })
+ jQuery('#messages').append(html)
 })
 
 // Handle server disconnect
@@ -64,14 +74,26 @@ locationButton.on('click', () => {
 
 // Handle newLocationMessage
 socket.on('newLocationMessage', (message) => {
-  let formattedTime = moment(message.createdAt).format('h:mm a')
+  /**  
+    let formattedTime = moment(message.createdAt).format('h:mm a')
 
-  let li = jQuery('<li></li>')
-  li.text(`${message.from} at ${formattedTime}: `)
+    let li = jQuery('<li></li>')
+    li.text(`${message.from} at ${formattedTime}: `)
 
-  let a  = jQuery('<a target="_blank">My current location</a>')
-  a.attr('href', message.url)
+    let a  = jQuery('<a target="_blank">My current location</a>')
+    a.attr('href', message.url)
 
-  li.append(a)
-  jQuery('#messages').append(li)
+    li.append(a)
+    jQuery('#messages').append(li)
+  **/
+ let formattedTime  = moment(message.createdAt).format('h:mm a')
+ let template       = jQuery('#location-message-template').html()
+
+ let html = Mustache.render(template, {
+   from:      message.from,
+   url:       message.url,
+   createdAt: formattedTime,
+ })
+
+ jQuery('#messages').append(html)
 })
