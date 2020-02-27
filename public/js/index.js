@@ -11,8 +11,10 @@ socket.on('connect', () => {
 // Handle "newMessage" from server.
 socket.on('newMessage', (message) => {
   console.log(`[INFO] Receieved newMessage event from the server: `, message)
+  let formattedTime = moment(message.createdAt).format('h:mm a')
+
   let li = jQuery('<li></li>')
-  li.text(`${message.from}: ${message.text}`)
+  li.text(`${message.from} at ${formattedTime}: ${message.text}`)
 
   jQuery('#messages').append(li)
 })
@@ -62,8 +64,10 @@ locationButton.on('click', () => {
 
 // Handle newLocationMessage
 socket.on('newLocationMessage', (message) => {
+  let formattedTime = moment(message.createdAt).format('h:mm a')
+
   let li = jQuery('<li></li>')
-  li.text(`${message.from}: `)
+  li.text(`${message.from} at ${formattedTime}: `)
 
   let a  = jQuery('<a target="_blank">My current location</a>')
   a.attr('href', message.url)
