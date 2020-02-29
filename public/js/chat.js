@@ -6,6 +6,18 @@ const socket = io();
 // Connect to the web socket.
 socket.on('connect', () => {
   console.log(`[INFO] Connected to the server`)
+  let params = jQuery.deparam(window.location.search)
+
+  socket.emit('join', params, (err) => {
+    if(err) {
+      console.log(`[ERROR] Failed to join chat room, err= `, err)
+      alert(err)
+      window.location.href = '/'
+    }
+    else {
+      console.log(`[INFO] Joined the chat room`)
+    }
+  })
 })
 
 // Handle "newMessage" from server.
@@ -31,7 +43,18 @@ socket.on('newMessage', (message) => {
 
 // Handle server disconnect
 socket.on('disconnect', () => {
-  console.log(`[INFO] Disconnected from the server`)
+  console.log(`[INFO] Disconnect user from the server`)
+})
+
+// Update and display the users in the chat room
+socket.on('updateUserList', (users) => {
+  console.log(`[DEBUG] received updateUsersList, users = `, users)
+  let ol = jQuery('<ol></ol>')
+
+  users.forEach( (user) => {
+    ol.append(jQuery('<li></li>').text(user))
+  })
+  jQuery('#user').html(ol)
 })
 
 // Send the message
