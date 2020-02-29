@@ -57,23 +57,30 @@ io.on('connection', (socket) => {
 
   socket.on('createMessage', (message, callback) => {
     console.log(`[INFO] Received createMessage event: `, message)
-    
-    io.emit('newMessage', {
-      from:       message.from,
-      text:       message.text,
-      createdAt:  new Date().getTime(),
-    });
+    let user = users.getUser(socket.id)
 
-    callback('ACK')
+    if(user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', {
+        from:       user.name,
+        text:       message.text,
+        createdAt:  new Date().getTime(),
+      });
+
+      callback('ACK')
+    }
   })
 
   socket.on('createLocationMessage', (coords) => {
     console.log(`[INFO] Received createLocationMessage, coords = `, coords)
-    io.emit('newLocationMessage', generateLocationMessage(
-      'Admin', 
-      coords.latitude, 
-      coords.longitude
-    ))
+    let user = users.getUser(socket.id)
+
+    if(user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(
+        user.name, 
+        coords.latitude, 
+        coords.longitude
+      ))
+    }
   })
 
   socket.on('disconnect', () => {
